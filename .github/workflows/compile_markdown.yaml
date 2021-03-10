@@ -27,7 +27,7 @@ jobs:
                         - name: checkout to github_pages for commit
                           uses: actions/checkout@v2
                           with:
-                                  ref: ${{ github.read_ref }}
+                                  ref: github_pages
   
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
