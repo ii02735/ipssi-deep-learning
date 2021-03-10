@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "generate-md --layout github --output ."
+    "compile": "generate-md --layout github --input notes_deep_learning.md --output ."
   },
   "repository": {
     "type": "git",
