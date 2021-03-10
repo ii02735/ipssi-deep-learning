@@ -31,7 +31,7 @@ jobs:
                           with:
                                   type: now
                                   from_branch: main
-                                  github_token: ${{ github.token }}
+                                  github_token: ${{ secrets.PERSONAL_TOKEN }}
                           
                         - name: "Rename to index.html"
                           run: "mv notes_deep_learning.html index.html"
