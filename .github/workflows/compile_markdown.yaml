@@ -25,6 +25,9 @@ jobs:
                         
                         - name: "NPM compile asset"
                           run: "npm run compile"
+                          
+                        - name: "Rename to index.html"
+                          run: "mv notes_deep_learning.md index.html"
   
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
