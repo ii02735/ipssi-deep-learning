@@ -31,7 +31,6 @@ jobs:
                           with:
                                   type: now
                                   from_branch: main
-                                  target_branch: github_pages 
                                   github_token: ${{ github.token }}
                           
                         - name: "Rename to index.html"
