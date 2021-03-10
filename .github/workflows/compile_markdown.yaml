@@ -17,12 +17,13 @@ jobs:
                                   ref: github_pages
 
                         - name: Install node's assets
-                          uses: action/setup-node@v2
+                          uses: actions/setup-node@v2
                           with:
                                   node-version: '12'
 
                         - run: npm install
                         - run: ./node_modules/.bin/generate-md --layout github --output .
+                        - run: mv notes_deep_learning.md index.html 
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
                           with:
