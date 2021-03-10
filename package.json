@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "convert": "generate-md --layout github"
+    "compile": "generate-md --layout github --output ."
   },
   "repository": {
     "type": "git",
