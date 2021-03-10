@@ -11,10 +11,10 @@ jobs:
         compile:
                 runs-on: 'ubuntu-latest'
                 steps:
-                        - name: checkout on github pages branch
+                        - name: checkout to main
                           uses: actions/checkout@v2
                           with:
-                                  ref: github_pages
+                                  ref: ${{ github.read_ref }}
 
                         - name: Install node's assets
                           uses: actions/setup-node@v2
@@ -22,8 +22,13 @@ jobs:
                                   node-version: '12'
 
                         - run: npm install
-                        - run: ./node_modules/.bin/generate-md --layout github --output .
-                        - run: mv notes_deep_learning.md index.html 
+                        - run: npm run compile
+                        
+                        - name: checkout to github_pages for commit
+                          uses: actions/checkout@v2
+                          with:
+                                  ref: ${{ github.read_ref }}
+  
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
                           with:
