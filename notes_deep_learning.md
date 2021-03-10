@@ -1,5 +1,3 @@
-Mon Drive
-
 # Continuité du machine learning
 
 Travail sur **TensorFlow** afin de construire des réseaux de neurones. 

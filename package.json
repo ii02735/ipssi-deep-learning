@@ -1,0 +1,22 @@
+{
+  "name": "ipssi-deep-learning",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "convert": "generate-md --layout github"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ii02735/ipssi-deep-learning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ii02735/ipssi-deep-learning/issues"
+  },
+  "homepage": "https://github.com/ii02735/ipssi-deep-learning#readme",
+  "dependencies": {
+    "markdown-styles": "^3.2.0"
+  }
+}
