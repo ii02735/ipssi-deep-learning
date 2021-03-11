@@ -559,12 +559,18 @@ model = VGG16()
 <p class="has-line-data" data-line-start="676" data-line-end="677">L’exécution de la fonction nous affichera environ <strong>140 millions de paramètres</strong> (soit 140 millions de poids).</p>
 <h3 class="code-line" data-line-start=678 data-line-end=679><a id="Prprocessing_pour_format_VGG_678"></a>Préprocessing pour format VGG</h3>
 <p class="has-line-data" data-line-start="680" data-line-end="681">Afin d’appliquer de la classification d’images à partir du VGG16, il faut convertir les images <strong>en format VGG</strong>.</p>
-<pre><code class="has-line-data" data-line-start="684" data-line-end="700" class="language-py"><span class="hljs-keyword">from</span> IPython.display <span class="hljs-keyword">import</span> Image
+<pre><code class="has-line-data" data-line-start="684" data-line-end="706" class="language-py"><span class="hljs-keyword">from</span> IPython.display <span class="hljs-keyword">import</span> Image
 <span class="hljs-keyword">from</span> tensorflow.keras.preprocessing.image <span class="hljs-keyword">import</span> load_img
 <span class="hljs-keyword">from</span> tensorflow.keras.applications.vgg16  <span class="hljs-keyword">import</span> preprocess_import
 
 <span class="hljs-comment"># Chargement et redimension (VGG16 étant entraîné sur des images 224 x 224)</span>
 image = load_img(<span class="hljs-string">'chemin vers image'</span>, target_size(<span class="hljs-number">224</span>,<span class="hljs-number">224</span>))
+
+<span class="hljs-comment"># Convertir NumPy array</span>
+image = img_to_array(image)
+
+<span class="hljs-comment"># Tensor rank 4 (#axis): samples, rows, columns, channels</span>
+image = image.reshape((<span class="hljs-number">1</span>,image.shape[<span class="hljs-number">0</span>],image.shape[<span class="hljs-number">1</span>], image.shape[<span class="hljs-number">2</span>]))
 
 <span class="hljs-comment"># Préparation en VGG : soustraction de la moyenne des pixels</span>
 image = preprocess_input(image)
@@ -575,9 +581,9 @@ image.shape <span class="hljs-comment"># affichera (1, 224, 224, 3)</span>
 tf.keras.preprocessing.image_to_array(img)
 
 </code></pre>
-<h3 class="code-line" data-line-start=701 data-line-end=702><a id="Prdiction_701"></a>Prédiction</h3>
-<p class="has-line-data" data-line-start="703" data-line-end="704">Maintenant que l’image a un format compatible, on peut demander à VGG, de deviner la classe.</p>
-<pre><code class="has-line-data" data-line-start="706" data-line-end="716" class="language-py">Renvoie un tableau de probabilités
+<h3 class="code-line" data-line-start=707 data-line-end=708><a id="Prdiction_707"></a>Prédiction</h3>
+<p class="has-line-data" data-line-start="709" data-line-end="710">Maintenant que l’image a un format compatible, on peut demander à VGG, de deviner la classe.</p>
+<pre><code class="has-line-data" data-line-start="712" data-line-end="722" class="language-py">Renvoie un tableau de probabilités
 proba = model.predict(image_pr)
 proba
 
@@ -587,26 +593,26 @@ proba
 """</span>
 pd.Dataframe(proba).T.sort_values(<span class="hljs-number">0</span>, ascending=<span class="hljs-keyword">False</span>)
 </code></pre>
-<h3 class="code-line" data-line-start=717 data-line-end=718><a id="Reconnaissance_de_limage_717"></a>Reconnaissance de l’image</h3>
-<p class="has-line-data" data-line-start="719" data-line-end="720">On peut commencer à déterminer la classe de l’image grâce à la probabilité.</p>
-<pre><code class="has-line-data" data-line-start="722" data-line-end="726" class="language-py"><span class="hljs-keyword">from</span> tensorflow.keras.applications.vgg16 <span class="hljs-keyword">import</span> decode_predictions
+<h3 class="code-line" data-line-start=723 data-line-end=724><a id="Reconnaissance_de_limage_723"></a>Reconnaissance de l’image</h3>
+<p class="has-line-data" data-line-start="725" data-line-end="726">On peut commencer à déterminer la classe de l’image grâce à la probabilité.</p>
+<pre><code class="has-line-data" data-line-start="728" data-line-end="732" class="language-py"><span class="hljs-keyword">from</span> tensorflow.keras.applications.vgg16 <span class="hljs-keyword">import</span> decode_predictions
 label = decode_predictions(proba)
 label <span class="hljs-comment"># renverra un tableau contenant des labels se rapprochant de la probabilité</span>
 </code></pre>
-<h2 class="code-line" data-line-start=727 data-line-end=728><a id="Adapter_un_modle_de_production__notre_besoin_727"></a>Adapter un modèle de production à notre besoin</h2>
-<p class="has-line-data" data-line-start="729" data-line-end="730">Le VGG16 contient un gros nombre de paramètres (140 millions), car il est prêt à travailler sur <strong>1000 classes (des millions d’images)</strong>.</p>
-<p class="has-line-data" data-line-start="731" data-line-end="732">Pour éviter de gaspiller des ressources inutiles, il faut justement <strong>adapter la structure de ce modèle à notre besoin</strong> -&gt; récupérer uniquement les labels concernant les chats et chiens ici.</p>
-<pre><code class="has-line-data" data-line-start="734" data-line-end="741" class="language-py">target = decode_predictions(np.arrage(<span class="hljs-number">1000</span>).reshape(<span class="hljs-number">1</span>,<span class="hljs-number">1000</span>), top=<span class="hljs-number">1000</span>) <span class="hljs-comment"># récupération de tous les labels</span>
+<h2 class="code-line" data-line-start=733 data-line-end=734><a id="Adapter_un_modle_de_production__notre_besoin_733"></a>Adapter un modèle de production à notre besoin</h2>
+<p class="has-line-data" data-line-start="735" data-line-end="736">Le VGG16 contient un gros nombre de paramètres (140 millions), car il est prêt à travailler sur <strong>1000 classes (des millions d’images)</strong>.</p>
+<p class="has-line-data" data-line-start="737" data-line-end="738">Pour éviter de gaspiller des ressources inutiles, il faut justement <strong>adapter la structure de ce modèle à notre besoin</strong> -&gt; récupérer uniquement les labels concernant les chats et chiens ici.</p>
+<pre><code class="has-line-data" data-line-start="740" data-line-end="747" class="language-py">target = decode_predictions(np.arrage(<span class="hljs-number">1000</span>).reshape(<span class="hljs-number">1</span>,<span class="hljs-number">1000</span>), top=<span class="hljs-number">1000</span>) <span class="hljs-comment"># récupération de tous les labels</span>
 dog = target.label.str.contains(<span class="hljs-string">'_dog'</span>)
 
 target[dog] <span class="hljs-comment"># labels contenant "dog"</span>
 
 cat = target.label.str.contains(<span class="hljs-string">'_cat'</span>)
 </code></pre>
-<p class="has-line-data" data-line-start="742" data-line-end="743">Cependant cette façon de filtrer les labels n’est pas la meilleure, car il contient un nombre restreint de races de chiens et de chats.</p>
-<p class="has-line-data" data-line-start="744" data-line-end="745"><strong>Il faut aller plus loin dans l’adaptation du modèle.</strong></p>
-<p class="has-line-data" data-line-start="746" data-line-end="747">L’idée est de récupérer les couches du modèle, dans un nouveau modèle :</p>
-<pre><code class="has-line-data" data-line-start="749" data-line-end="763" class="language-py">
+<p class="has-line-data" data-line-start="748" data-line-end="749">Cependant cette façon de filtrer les labels n’est pas la meilleure, car il contient un nombre restreint de races de chiens et de chats.</p>
+<p class="has-line-data" data-line-start="750" data-line-end="751"><strong>Il faut aller plus loin dans l’adaptation du modèle.</strong></p>
+<p class="has-line-data" data-line-start="752" data-line-end="753">L’idée est de récupérer les couches du modèle, dans un nouveau modèle :</p>
+<pre><code class="has-line-data" data-line-start="755" data-line-end="769" class="language-py">
 cnn = Sequential()
 <span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> model.layers[:-<span class="hljs-number">1</span>]:
     cnn.add(layer)
@@ -620,17 +626,17 @@ cnn.summary()
    deux classes nous suffit.
 """</span>
 </code></pre>
-<p class="has-line-data" data-line-start="764" data-line-end="765">Comme notre modèle se base sur un modèle déjà entraîné, il est inutile que notre modèle se soumettre à un entraînement.</p>
-<p class="has-line-data" data-line-start="766" data-line-end="768">Il faut donc préciser pour chaque couche, qu’on ne souhaite pas effectuer un entraînement.<br>
+<p class="has-line-data" data-line-start="770" data-line-end="771">Comme notre modèle se base sur un modèle déjà entraîné, il est inutile que notre modèle se soumettre à un entraînement.</p>
+<p class="has-line-data" data-line-start="772" data-line-end="774">Il faut donc préciser pour chaque couche, qu’on ne souhaite pas effectuer un entraînement.<br>
 Il s’agit de mettre l’attribut <code>trainable</code> à <code>False</code>.</p>
-<pre><code class="has-line-data" data-line-start="770" data-line-end="775" class="language-py">
+<pre><code class="has-line-data" data-line-start="776" data-line-end="781" class="language-py">
 <span class="hljs-keyword">for</span> layer <span class="hljs-keyword">in</span> cnn.layers:
     layer.trainable = <span class="hljs-keyword">False</span>
     
 </code></pre>
-<p class="has-line-data" data-line-start="776" data-line-end="777">On peut maintenant rajouter la dernière couche, avec le bon nombre de classes à déterminer :</p>
-<pre><code class="has-line-data" data-line-start="779" data-line-end="781" class="language-py">cnn.add(Dense(units=<span class="hljs-number">2</span>, activation=<span class="hljs-string">'softmax'</span>))
+<p class="has-line-data" data-line-start="782" data-line-end="783">On peut maintenant rajouter la dernière couche, avec le bon nombre de classes à déterminer :</p>
+<pre><code class="has-line-data" data-line-start="785" data-line-end="787" class="language-py">cnn.add(Dense(units=<span class="hljs-number">2</span>, activation=<span class="hljs-string">'softmax'</span>))
 </code></pre>
-<p class="has-line-data" data-line-start="782" data-line-end="783"><a href="developers.google.com/machine_learning/practica/image_classification/exercice_3">Notebook pour déconstruire un autre modèle afin de l’appliquer sur un cas plus restreint</a></p>
-<p class="has-line-data" data-line-start="784" data-line-end="785"><a href="https://onedrive.live.com/?authkey=%21AEpov3AcXs2dSqY&amp;id=6C6D756296D4662%21783226&amp;cid=06C6D756296D4662">Ressources du prof (notebooks pour VGG, data)</a></p>
+<p class="has-line-data" data-line-start="788" data-line-end="789"><a href="developers.google.com/machine_learning/practica/image_classification/exercice_3">Notebook pour déconstruire un autre modèle afin de l’appliquer sur un cas plus restreint</a></p>
+<p class="has-line-data" data-line-start="790" data-line-end="791"><a href="https://onedrive.live.com/?authkey=%21AEpov3AcXs2dSqY&amp;id=6C6D756296D4662%21783226&amp;cid=06C6D756296D4662">Ressources du prof (notebooks pour VGG, data)</a></p>
 </body></html>
