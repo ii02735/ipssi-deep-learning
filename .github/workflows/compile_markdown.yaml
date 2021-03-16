@@ -11,36 +11,10 @@ jobs:
         compile:
                 runs-on: 'ubuntu-latest'
                 steps:
-                        - name: checkout to github_pages branch
-                          uses: actions/checkout@v2
-                          with:
-                                  ref: github_pages
-
-                        - name: Install node's assets
-                          uses: actions/setup-node@v2
-                          with:
-                                  node-version: '12'
-                                  
-                        - name: "NPM install"
-                          run: "npm install"
-                        
-                        - name: "NPM compile asset"
-                          run: "npm run compile"
-                        - name: Merge main to github_pages
+                        - uses: actions/checkout@v2
+                        - name: Merge main to github pages
                           uses: devmasx/merge-branch@v1.3.1
                           with:
-                                  type: now
-                                  from_branch: main
-                                  github_token: ${{ secrets.PERSONAL_TOKEN }}
-                          
-                        - name: "Rename to index.html"
-                          run: "mv notes_deep_learning.html index.html"
-  
-                        - name: Commit build # commit if differences are tracked after updates (previous step)
-                          uses: stefanzweifel/git-auto-commit-action@v4
-                          with:
-                              commit_message: HTML build
-                              commit_user_name: GitHub Actions Bot
-                              commit_author: GitHub Action <actions@github.com>
-                              skip_dirty_check: false
-                              push_options:  --force
+                            type: now
+                            target_branch: github_pages
+                            github_token: ${{ github.token }}
