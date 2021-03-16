@@ -44,5 +44,5 @@ jobs:
                               commit_message: HTML build
                               commit_user_name: GitHub Actions Bot
                               commit_author: GitHub Action <actions@github.com>
-                              skip_dirty_check: false
+                              skip_dirty_check: true
                               push_options:  --force
