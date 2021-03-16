@@ -31,14 +31,6 @@ jobs:
                                   from_branch: main
                                   github_token: ${{ github_token }}
 
-                        - name: Merge main to github pages
-                          uses: devmasx/merge-branch@v1.3.1
-                          with:
-                            type: now
-                            target_branch: github_pages
-                            github_token: ${{ github.token }}
-
-
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
                           with:
