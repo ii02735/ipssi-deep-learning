@@ -12,6 +12,8 @@ jobs:
                 runs-on: 'ubuntu-latest'
                 steps:
                         - uses: actions/checkout@v2
+                          with:
+                                 ref: github_pages
 
                         - name: Install node's assets
                           uses: actions/setup-node@v2
@@ -21,8 +23,6 @@ jobs:
                         - name: "NPM install"
                           run: "npm install"
                         
-                        - name: "NPM compile asset"
-                          run: "npm run compile"
 
                         - name: Merge main to github_pages
                           uses: devmasx/merge-branch@v1.3.1
@@ -30,6 +30,9 @@ jobs:
                                   type: now
                                   from_branch: main
                                   github_token: ${{ github.token }}
+
+                        - name: "NPM compile asset"
+                          run: "npm run compile"
 
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
