@@ -762,7 +762,7 @@ cnn.summary()
 """
 ```
 
-Comme notre modèle se base sur un modèle déjà entraîné, il est inutile que notre modèle se soumettre à un entraînement.
+Comme notre modèle se base sur un modèle déjà entraîné, il est inutile que notre modèle **se soumettre à un nouvel entraînement.**
 
 Il faut donc préciser pour chaque couche, qu'on ne souhaite pas effectuer un entraînement.
 Il s'agit de mettre l'attribut `trainable` à `False`.
