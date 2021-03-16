@@ -15,6 +15,13 @@ jobs:
                           with:
                                  ref: github_pages
 
+                        - name: Merge main to github_pages
+                          uses: devmasx/merge-branch@v1.3.1
+                          with:
+                                  type: now
+                                  from_branch: main
+                                  github_token: ${{ github.token }}
+
                         - name: Install node's assets
                           uses: actions/setup-node@v2
                           with:
@@ -23,13 +30,6 @@ jobs:
                         - name: "NPM install"
                           run: "npm install"
                         
-
-                        - name: Merge main to github_pages
-                          uses: devmasx/merge-branch@v1.3.1
-                          with:
-                                  type: now
-                                  from_branch: main
-                                  github_token: ${{ github.token }}
 
                         - name: "NPM compile asset"
                           run: "npm run compile"
