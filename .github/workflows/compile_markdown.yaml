@@ -12,13 +12,32 @@ jobs:
                 runs-on: 'ubuntu-latest'
                 steps:
                         - uses: actions/checkout@v2
+
+                        - name: "NPM install"
+                          run: "npm install"
+                        
+                        - name: "NPM compile asset"
+                          run: "npm run compile"
+
+                        - name: Merge main to github_pages
+                          uses: devmasx/merge-branch@v1.3.1
+                          with:
+                                  type: now
+                                  from_branch: main
+                                  github_token: ${{ github_token }}
+
                         - name: Merge main to github pages
                           uses: devmasx/merge-branch@v1.3.1
                           with:
                             type: now
                             target_branch: github_pages
                             github_token: ${{ github.token }}
-
+                            
+                        - name: Install node's assets
+                          uses: actions/setup-node@v2
+                          with:
+                                  node-version: '12'
+                                  
                         - name: Commit build # commit if differences are tracked after updates (previous step)
                           uses: stefanzweifel/git-auto-commit-action@v4
                           with:
