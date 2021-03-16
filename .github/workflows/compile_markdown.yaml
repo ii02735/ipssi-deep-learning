@@ -18,3 +18,12 @@ jobs:
                             type: now
                             target_branch: github_pages
                             github_token: ${{ github.token }}
+
+                        - name: Commit build # commit if differences are tracked after updates (previous step)
+                          uses: stefanzweifel/git-auto-commit-action@v4
+                          with:
+                              commit_message: HTML build
+                              commit_user_name: GitHub Actions Bot
+                              commit_author: GitHub Action <actions@github.com>
+                              skip_dirty_check: false
+                              push_options:  --force
